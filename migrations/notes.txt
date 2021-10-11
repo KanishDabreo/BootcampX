@@ -10,7 +10,7 @@
 -Once you've given it a try, toggle the code block below to reveal our version of the code.
 -Make sure the code in your students_cohorts.sql file is identical to the code below.
 
-ex. students_cohorts.sql file
+ex. students_cohorts.sql file(--each represents a column)
   CREATE TABLE cohorts (
   id SERIAL PRIMARY KEY NOT NULL,
   name VARCHAR(255) NOT NULL,
@@ -32,3 +32,24 @@ CREATE TABLE students (
 3. Add the tables to the database
 - From your psql session, type \i migrations/students_cohorts.sql
 -Now enter \dt into your psql session to make sure the two tables have been created.
+
+4. Create a New SQL File
+Create a new directory in BootcampX called 0_selects.Name the file whatever you like, but adding a number at the beginning can help organize. A good name for this requirement might be 1_students_without_github.sql. Then write the query inside this file.
+ex.
+SELECT id, name, email, cohort_id
+FROM students
+WHERE github IS NULL
+ORDER BY cohort_id
+
+5.Execute The Query
+-Make sure you're in a psql session.
+-Execute psql from, the BootcampX directory.
+-Make sure you're using the bootcampx database \c bootcampx
+-Execute the query with the following command:
+\i 0_selects/1_students_without_github.sql
+
+
+5a. TO Add the tables to the database.
+
+-From psql, type \i migrations/assignments_submissions.sql
+-Now enter \dt into your psqlsession to make sure the two tables have been created.
