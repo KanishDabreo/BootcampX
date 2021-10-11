@@ -45,11 +45,62 @@ ORDER BY cohort_id
 -Make sure you're in a psql session.
 -Execute psql from, the BootcampX directory.
 -Make sure you're using the bootcampx database \c bootcampx
--Execute the query with the following command:
+-Execute/run the query with the following command:
 \i 0_selects/1_students_without_github.sql
 
 
 5a. TO Add the tables to the database.
 
 -From psql, type \i migrations/assignments_submissions.sql
--Now enter \dt into your psqlsession to make sure the two tables have been created.
+-Now enter \dt into your psql session to make sure the two tables have been created.
+
+6. JOINING TABLES WALK THROUGH
+-We need to get data that is stored in more than one table. To start using multiple tables in a query, we first have to JOIN them.
+EX. SELECT name, email, cohort_id
+FROM students JOIN cohorts;
+
+-So we want to select data from the students table and the cohorts table JOINed together. If these two tables are JOINed together, we can select columns from either table.
+EX. SELECT name, email, name
+FROM students JOIN cohorts;
+
+-However, we having a naming conflict because the column name is the same in both tables. So we have to specify which table we want to select name from.
+EX. SELECT students.name, email, cohorts.name
+FROM students JOIN cohorts;
+
+-And to make our results look a little bit nicer, we can alias the names.
+EX. SELECT students.name as student_name, email, cohorts.name as cohort_name
+FROM students JOIN cohorts;
+
+-We must explicitly tell the database to join these two tables using the cohort_id from students and the id from cohorts. We do this with the ON keyword.
+
+EX. SELECT students.name as student_name, email, cohorts.name as cohort_name
+FROM students JOIN cohorts ON cohort_id = cohorts.id;
+
+**** Every JOIN must also have an ON. ****
+The order does not matter here, so we could also write the exact same query like this:
+
+EX2. SELECT students.name as student_name, email, cohorts.name as cohort_name
+FROM cohorts JOIN students ON cohort_id = cohorts.id;
+Or this:
+
+EX3. SELECT students.name as student_name, email, cohorts.name as cohort_name
+FROM students JOIN cohorts ON cohorts.id = cohort_id;
+
+INNER JOIN
+EX. SELECT students.name as student_name, email, cohorts.name as cohort_name
+FROM students INNER JOIN cohorts ON cohorts.id = cohort_id;
+
+OUTER JOIN
+-there are 3 different types of OUTER JOIN and we need to specify which one we want to perform: LEFT, RIGHT, or FULL.
+ -LEFT OUTER JOIN (--will return all of the students, even ones without a cohort_id.)
+ EX. SELECT students.name as student_name, email, cohorts.name as cohort_name
+  FROM students LEFT OUTER JOIN cohorts ON cohorts.id = cohort_id;
+   -RIGHT OUTER JOIN (--will return all cohorts, even ones without any students enrolled)
+ EX. SELECT students.name as student_name, email, cohorts.name as cohort_name
+FROM students RIGHT OUTER JOIN cohorts ON cohorts.id = cohort_id;
+   -FULL OUTER JOIN (--will return all cohorts and all students, even when there is no match)
+ EX. SELECT students.name as student_name, email, cohorts.name as cohort_name
+FROM students FULL OUTER JOIN cohorts ON cohorts.id = cohort_id;
+
+An INNER JOIN will only return results where there is a match between the two tables.
+An OUTER JOIN will do the same as an INNER JOIN but also returns unmatched rows in one or both tables. An OUTER JOIN can be LEFT, RIGHT, or FULL.
